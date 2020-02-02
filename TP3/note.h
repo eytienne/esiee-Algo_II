@@ -2,16 +2,18 @@
 #ifndef NOTE_H
 #define NOTE_H
 
+typedef struct SimpleLinkedList SimpleLinkedList;
 typedef struct Note {
 	long idEleve;
 	float valeurNote;
-	struct Note *nextNote;
 } Note;
 
-Note *newListeNote();
+struct Element {
+	Note n;
+};
 
-int ajouterNoteListe(Note *notes, long idEleve, float newNote);
+void ajouterNoteListe(SimpleLinkedList **notes, long idEleve, float note);
 
-void afficheNoteid(const Note *notes, long idEleve);
+void afficheNoteId(const SimpleLinkedList *notes, long idEleve);
 
 #endif

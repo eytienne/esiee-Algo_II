@@ -1,71 +1,64 @@
 #include "evenement.h"
+#include "linkedList.h"
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 void printEvenement(const Evenement *toPrint);
 
-Evenement *newListeEvenement() {
-	Evenement *newEvent = (Evenement *)malloc(sizeof(Evenement));
-	newEvent->previous = NULL;
-	newEvent->next = NULL;
-	return newEvent;
-}
-
-int ajouterEvenementListe(Evenement *evts, time_t eventDate,
+int ajouterEvenementListe(LinkedList **evts, time_t eventDate,
 						  const char *eventValue) {
-	Evenement *newEvent = newListeEvenement();
-	newEvent->dateEvenement = eventDate;
-	strcpy(newEvent->valeurEvenement, eventValue);
-
-	Evenement *whereToAdd = evts;
-	while (eventDate < whereToAdd->next->dateEvenement)
-		whereToAdd = whereToAdd->next;
-
-	newEvent->previous = whereToAdd;
-	newEvent->next = whereToAdd->next;
-	whereToAdd->next = newEvent;
+	Element e;
+	e.e.dateEvenement = eventDate;
+	size_t strLen = strlen(eventValue);
+	e.e.valeurEvenement = (char *)malloc(strLen);
+	strncpy(e.e.valeurEvenement, eventValue, strLen);
+	ajouterAListe(evts, &e);
 }
 
-void afficheListeEvenement(const Evenement *evts) {
-	while (evts->next != NULL) {
-		Evenement *toPrint = evts->next;
-
+void afficheListeEvenement(const LinkedList *evts) {
+	assert(evts != NULL);
+	int i = 0;
+	while (evts != NULL && evts->value != NULL) {
+		printEvenement(&evts->value->e);
 		evts = evts->next;
 	}
 }
 
-void afficheEvenement(const Evenement *evts, time_t dateEvenement) {
+void afficheEvenement(const LinkedList *evts, time_t dateEvenement) {
 	afficheEvenementAutour(evts, dateEvenement, 0);
 }
 
-void afficheEvenementAutour(const Evenement *evts, time_t dateEvenement,
+void afficheEvenementAutour(const LinkedList *evts, time_t dateEvenement,
 							int beforeAfter) {
-	int nbToPrint = beforeAfter * 2 + 1;
-
-	Evenement *toPrint = NULL;
-	while (evts->next != NULL) {
-		toPrint = evts->next;
-		if (toPrint->dateEvenement) {
-			printEvenement(toPrint);
-			return;
+	assert(evts != NULL);
+	LinkedList *toPrint = NULL;
+	while (evts->value != NULL) {
+		if (evts->value->e.dateEvenement == dateEvenement) {
+			toPrint = evts;
+			break;
 		}
 		evts = evts->next;
 	}
 	if (toPrint != NULL) {
-		int i;
-		for (i = 0; i < beforeAfter && evts->previous != NULL; i++)
+		for (int i = 0; i < beforeAfter && evts->previous != NULL; i++)
 			evts = evts->previous;
 		while (evts != toPrint) {
-            printEvenement(evts);
-            evts = evts->next;
+			printEvenement(&evts->value->e);
+			evts = evts->next;
 		}
-        printEvenement(evts);
-        for (int j = 0; j < i; j++)
-            printEvenement(evts);
+		for (int i = 0;
+			 i < (beforeAfter + 1) && evts != NULL && evts->value != NULL;
+			 i++) {
+			printEvenement(&evts->value->e);
+			evts = evts->next;
+		}
 	}
 }
 
 void printEvenement(const Evenement *toPrint) {
-	printf("[%ld] : %s", toPrint->dateEvenement, toPrint->valeurEvenement);
+	assert(toPrint != NULL);
+	assert(toPrint->valeurEvenement != NULL);
+	printf("[%ld] : %s\n", toPrint->dateEvenement, toPrint->valeurEvenement);
 }

@@ -1,30 +1,21 @@
 #include "note.h"
+#include "simpleLinkedList.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-Note *newListeNote() {
-	Note *newNote = (Note *)malloc(sizeof(Note));
-	newNote->nextNote = NULL;
-	return newNote;
+void ajouterNoteListe(SimpleLinkedList **notes, long idEleve, float note) {
+	Element e;
+	e.n.idEleve = idEleve;
+	e.n.valeurNote = note;
+	ajouterAListe(notes, &e);
 }
 
-int ajouterNoteListe(Note *notes, long idEleve, float noteValue) {
-	Note *newNote = newListeNote();
-	if (newNote == NULL)
-		return -1;
-	newNote->idEleve = idEleve;
-	newNote->valeurNote = noteValue;
-	newNote->nextNote = notes->nextNote;
-	notes->nextNote = newNote;
-	return 0;
-}
-
-void afficheNoteid(const Note *notes, long idEleve) {
-	while (notes != NULL) {
-		if (notes->idEleve == idEleve) {
-			printf("Note de l'élève n° %ld : %f\n", idEleve, notes->valeurNote);
-			return;
+void afficheNoteId(const SimpleLinkedList *notes, long idEleve) {
+	while (notes != NULL && notes->value != NULL) {
+		if (notes->value->n.idEleve == idEleve) {
+			printf("Note eleve n° %ld : %f\n", idEleve,
+				   notes->value->n.valeurNote);
 		}
-		notes = notes->nextNote;
+		notes = notes->next;
 	}
 }
