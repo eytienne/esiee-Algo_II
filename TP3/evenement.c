@@ -33,7 +33,7 @@ void afficheEvenement(const LinkedList *evts, time_t dateEvenement) {
 void afficheEvenementAutour(const LinkedList *evts, time_t dateEvenement,
 							int beforeAfter) {
 	assert(evts != NULL);
-	LinkedList *toPrint = NULL;
+	const LinkedList *toPrint = NULL;
 	while (evts->value != NULL) {
 		if (evts->value->e.dateEvenement == dateEvenement) {
 			toPrint = evts;
