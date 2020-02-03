@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 int main(int argc, char const *argv[]) {
@@ -13,6 +14,9 @@ int main(int argc, char const *argv[]) {
 	ajouterEvenementListe(&evts, t0 + 3, "fourth event");
 	ajouterEvenementListe(&evts, t0 + 1, "second event");
 	ajouterEvenementListe(&evts, t0 + 4, "fifth event");
+
+	assert(evts->value->e.dateEvenement == t0 + 4);
+	assert(strcmp(evts->value->e.valeurEvenement, "fifth event") == 0);
 
 	afficheListeEvenement(evts);
 
